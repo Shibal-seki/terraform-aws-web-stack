@@ -32,6 +32,7 @@ resource "aws_security_group" "web" {
 
 # Internet vers ALB : HTTP 80
 resource "aws_vpc_security_group_ingress_rule" "alb_http" {
+  description       = "HTTP public vers le Load Balancer"
   security_group_id = aws_security_group.alb.id
   cidr_ipv4         = "0.0.0.0/0"
   from_port         = 80
@@ -41,6 +42,7 @@ resource "aws_vpc_security_group_ingress_rule" "alb_http" {
 
 # ALB vers instances EC2 : HTTP 80 uniquement
 resource "aws_vpc_security_group_ingress_rule" "web_http" {
+  description                  = "HTTP autorise depuis le SG ALB uniquement"
   security_group_id            = aws_security_group.web.id
   referenced_security_group_id = aws_security_group.alb.id
   from_port                    = 80
@@ -50,6 +52,7 @@ resource "aws_vpc_security_group_ingress_rule" "web_http" {
 
 # Sortie ALB vers les instances Web
 resource "aws_vpc_security_group_egress_rule" "alb_to_web" {
+  description                  = "Trafic HTTP du ALB vers les instances"
   security_group_id            = aws_security_group.alb.id
   referenced_security_group_id = aws_security_group.web.id
   from_port                    = 80
@@ -59,6 +62,7 @@ resource "aws_vpc_security_group_egress_rule" "alb_to_web" {
 
 # Sortie Web HTTP pour installation des paquets
 resource "aws_vpc_security_group_egress_rule" "web_http_out" {
+  description       = "HTTP sortant pour installation des paquets"
   security_group_id = aws_security_group.web.id
   cidr_ipv4         = "0.0.0.0/0"
   from_port         = 80
@@ -68,6 +72,7 @@ resource "aws_vpc_security_group_egress_rule" "web_http_out" {
 
 # Sortie Web HTTPS pour AWS SSM et mises a jour
 resource "aws_vpc_security_group_egress_rule" "web_https_out" {
+  description       = "HTTPS sortant pour AWS SSM et mises a jour"
   security_group_id = aws_security_group.web.id
   cidr_ipv4         = "0.0.0.0/0"
   from_port         = 443
