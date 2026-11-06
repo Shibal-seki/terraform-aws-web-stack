@@ -1,8 +1,9 @@
 # Application Load Balancer
 resource "aws_lb" "this" {
-  name               = "${var.name}-${var.environment}-alb"
-  internal           = false
-  load_balancer_type = "application"
+  name                       = "${var.name}-${var.environment}-alb"
+  internal                   = false
+  load_balancer_type         = "application"
+  drop_invalid_header_fields = true
 
   security_groups = [
     aws_security_group.alb.id
